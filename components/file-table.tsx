@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
 type Props = {
@@ -8,6 +9,8 @@ type Props = {
 
 export const FileTable: React.FC<Props> = ({ data }) => {
   const [rows, setRows] = useState<ProcessBirdsResultRow[]>(data)
+
+  const router = useRouter()
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout
@@ -18,14 +21,16 @@ export const FileTable: React.FC<Props> = ({ data }) => {
       setRows(result)
       const isProcessing = result.some((row) => row.status === "processing")
       if (!isProcessing) {
+        setRows(result)
+        router.refresh()
         clearInterval(intervalId)
       }
     }
 
     // poll every 5 seconds until no rows are still processing
-    // if (rows.some((row) => row.status === "processing")) {
-    //   intervalId = setInterval(pollData, 5000)
-    // }
+    if (rows.some((row) => row.status === "processing")) {
+      intervalId = setInterval(pollData, 5000)
+    }
 
     return () => clearInterval(intervalId)
   }, [rows])

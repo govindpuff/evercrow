@@ -1,7 +1,6 @@
 "use client"
 
 import { Plus } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
@@ -20,8 +19,6 @@ export default function Uploader() {
   const [file, setFile] = useState<File>()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-
-  const router = useRouter()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files?.[0])
