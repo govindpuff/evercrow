@@ -1,94 +1,20 @@
-"use client"
+import { FileTable } from "@/components/file-table"
+import Uploader from "@/components/uploader"
+import { sql } from "@vercel/postgres"
 
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Plus } from "lucide-react"
-import { useState } from "react"
-import { toast } from "sonner"
+const fetchResults = async () => {
+  const { rows } =
+    await sql<ProcessBirdsResultRow>`SELECT * FROM process_birds_results;`
+  return rows
+}
 
-export default function Home() {
-  const [file, setFile] = useState<File>()
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files?.[0])
-  }
-
-  const processFile = async () => {
-    if (!file) {
-      toast("Something went wrong!")
-      return
-    }
-
-    setIsProcessing(true)
-
-    const formData = new FormData()
-    formData.append("file", file)
-
-    const res = await fetch("/api/process-birds", {
-      body: formData,
-      method: "POST",
-    })
-
-    const parsed = await res.json()
-    console.log(parsed)
-
-    setIsProcessing(false)
-    setDialogOpen(false)
-    setFile(undefined)
-  }
+export default async function Home() {
+  const data = await fetchResults()
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center">
-      <Dialog open={dialogOpen}>
-        <DialogTrigger onClick={() => setDialogOpen(true)}>
-          <Plus />
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Upload a new PDF</DialogTitle>
-            <DialogDescription>
-              Process a PDF document to extract accurate bird name counts
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => {
-              handleFileChange(e)
-            }}
-          />
-
-          {isProcessing && <div>Processing file</div>}
-
-          <DialogFooter>
-            <Button
-              disabled={isProcessing}
-              variant={"ghost"}
-              onClick={() => setDialogOpen(false)}
-            >
-              Close
-            </Button>
-
-            <Button
-              disabled={!file || (file && isProcessing)}
-              onClick={() => processFile()}
-            >
-              Start Processing
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Uploader />
+      <FileTable data={data} />
     </main>
   )
 }

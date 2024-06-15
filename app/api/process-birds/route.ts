@@ -28,6 +28,37 @@ const getTextractResult = async (jobId: string) => {
   return result
 }
 
+const processTextract = async (id: string) => {
+  const textractCommand = new StartDocumentTextDetectionCommand({
+    DocumentLocation: {
+      S3Object: { Bucket: "evercrow-files", Name: `${id}.pdf` },
+    },
+  })
+
+  const { JobId: jobId } = await textract.send(textractCommand)
+
+  if (!jobId) {
+    return NextResponse.json(
+      { error: "Failed to process the document" },
+      { status: 500 }
+    )
+  }
+
+  const textractResult = await getTextractResult(jobId)
+
+  if (textractResult?.JobStatus === "SUCCEEDED") {
+    await sql`UPDATE process_birds_results SET status = 'success' WHERE id = ${id};`
+  } else {
+    await sql`UPDATE process_birds_results SET status = 'failed' WHERE id = ${id};`
+  }
+
+  const words = textractResult?.Blocks?.filter(
+    (block) => block.BlockType === "WORD"
+  ).map((block) => block.Text)
+
+  console.log(words)
+}
+
 export async function POST(req: Request) {
   const formData = await req.formData()
 
@@ -39,44 +70,22 @@ export async function POST(req: Request) {
 
   const buffer = Buffer.from(await file.arrayBuffer())
 
+  const id = crypto.randomUUID()
   try {
     await s3.send(
       new PutObjectCommand({
         Bucket: "evercrow-files",
-        Key: file.name,
+        Key: `${id}.pdf`,
         Body: buffer,
       })
     )
 
-    const id = crypto.randomUUID()
+    await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, 'processing');`
 
-    const result =
-      await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, 'processing');`
+    // kick this async task off
+    processTextract(id)
 
-    console.log(result)
-
-    const textractCommand = new StartDocumentTextDetectionCommand({
-      DocumentLocation: {
-        S3Object: { Bucket: "evercrow-files", Name: id },
-      },
-    })
-
-    const { JobId: jobId } = await textract.send(textractCommand)
-
-    if (!jobId) {
-      return NextResponse.json(
-        { error: "Failed to process the document" },
-        { status: 500 }
-      )
-    }
-
-    const textractResult = await getTextractResult(jobId)
-
-    const words = textractResult?.Blocks?.filter(
-      (block) => block.BlockType === "WORD"
-    ).map((block) => block.Text)
-
-    return NextResponse.json({ words }, { status: 200 })
+    return NextResponse.json({ id }, { status: 200 })
   } catch (error) {
     console.error("Error calling Textract:", error)
     return NextResponse.json(
