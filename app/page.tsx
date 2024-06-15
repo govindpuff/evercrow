@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Plus } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
 
 export default function Home() {
   const [file, setFile] = useState<File>()
@@ -23,14 +24,28 @@ export default function Home() {
     setFile(event.target.files?.[0])
   }
 
-  const processFile = () => {
+  const processFile = async () => {
+    if (!file) {
+      toast("Something went wrong!")
+      return
+    }
+
     setIsProcessing(true)
 
-    setTimeout(() => {
-      setIsProcessing(false)
-      setFile(undefined)
-      setDialogOpen(false)
-    }, 4000)
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const res = await fetch("/api/process-birds", {
+      body: formData,
+      method: "POST",
+    })
+
+    const parsed = await res.json()
+    console.log(parsed)
+
+    setIsProcessing(false)
+    setDialogOpen(false)
+    setFile(undefined)
   }
 
   return (
