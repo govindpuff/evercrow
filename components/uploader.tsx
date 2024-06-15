@@ -49,7 +49,7 @@ export default function Uploader() {
     setIsProcessing(false)
     setDialogOpen(false)
     setFile(undefined)
-    router.refresh()
+    location.reload()
   }
 
   return (
