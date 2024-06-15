@@ -6,6 +6,8 @@ import {
   JobStatus,
   StartDocumentTextDetectionCommand,
 } from "@aws-sdk/client-textract"
+import { sql } from "@vercel/postgres"
+import { randomUUID } from "crypto"
 import { NextResponse } from "next/server"
 
 export const runtime = "edge"
@@ -47,9 +49,16 @@ export async function POST(req: Request) {
       })
     )
 
+    const id = randomUUID()
+
+    const result =
+      await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, "PROCESSING");`
+
+    console.log(result)
+
     const textractCommand = new StartDocumentTextDetectionCommand({
       DocumentLocation: {
-        S3Object: { Bucket: "evercrow-files", Name: file.name },
+        S3Object: { Bucket: "evercrow-files", Name: id },
       },
     })
 
