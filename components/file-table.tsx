@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
 type Props = {
@@ -9,8 +8,6 @@ type Props = {
 
 export const FileTable: React.FC<Props> = ({ data }) => {
   const [rows, setRows] = useState<ProcessBirdsResultRow[]>(data)
-
-  const router = useRouter()
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout
@@ -22,7 +19,6 @@ export const FileTable: React.FC<Props> = ({ data }) => {
       const isProcessing = result.some((row) => row.status === "processing")
       if (!isProcessing) {
         setRows(result)
-        router.refresh()
         clearInterval(intervalId)
       }
     }
@@ -37,7 +33,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
 
   return (
     <div>
-      {data.map((row) => (
+      {rows.map((row) => (
         <div key={row.id}>
           {row.id} - {row.filename} - {row.status}
         </div>

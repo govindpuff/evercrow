@@ -42,11 +42,10 @@ export default function Uploader() {
 
     const parsed = await res.json()
     console.log(parsed)
-
+    location.reload()
     setIsProcessing(false)
     setDialogOpen(false)
     setFile(undefined)
-    location.reload()
   }
 
   return (
