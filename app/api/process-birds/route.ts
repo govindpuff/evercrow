@@ -8,6 +8,8 @@ import {
 } from "@aws-sdk/client-textract"
 import { NextResponse } from "next/server"
 
+export const runtime = "edge"
+
 const getTextractResult = async (jobId: string) => {
   let result
   let status: JobStatus = "IN_PROGRESS"
