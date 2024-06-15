@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const id = crypto.randomUUID()
 
     const result =
-      await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, "PROCESSING");`
+      await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, 'PROCESSING');`
 
     console.log(result)
 
