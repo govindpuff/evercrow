@@ -23,9 +23,9 @@ export const FileTable: React.FC<Props> = ({ data }) => {
     }
 
     // poll every 5 seconds until no rows are still processing
-    if (rows.some((row) => row.status === "processing")) {
-      intervalId = setInterval(pollData, 5000)
-    }
+    // if (rows.some((row) => row.status === "processing")) {
+    //   intervalId = setInterval(pollData, 5000)
+    // }
 
     return () => clearInterval(intervalId)
   }, [rows])
