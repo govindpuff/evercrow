@@ -80,7 +80,7 @@ export async function POST(req: Request) {
       })
     )
 
-    await sql`INSERT INTO process_birds_results (id, filename, status) VALUES (${id}, ${file.name}, 'processing');`
+    await sql`INSERT INTO process_birds_results (id, filename, filesize, status) VALUES (${id}, ${file.name}, ${file.size} ,'processing');`
 
     // kick this async task off
     processTextract(id)

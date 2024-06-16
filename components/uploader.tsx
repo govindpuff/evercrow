@@ -51,8 +51,11 @@ export default function Uploader() {
   return (
     <div>
       <Dialog open={dialogOpen}>
-        <DialogTrigger onClick={() => setDialogOpen(true)}>
-          <Plus />
+        <DialogTrigger asChild>
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="h-5 w-5" />
+            Upload new file
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -69,9 +72,7 @@ export default function Uploader() {
               handleFileChange(e)
             }}
           />
-
           {isProcessing && <div>Processing file</div>}
-
           <DialogFooter>
             <Button
               disabled={isProcessing}

@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import Link from "next/link"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -17,8 +18,15 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-center`}>
-        <div className="max-w-screen-xl w-full">{children}</div>
+      <body className={`${inter.className} flex justify-center relative`}>
+        <div className="max-w-screen-xl w-full">
+          <div className="w-full h-16 p-4">
+            <Link href={"/"}>
+              <img src="/evercrow.png" className="h-12" />
+            </Link>
+          </div>
+          {children}
+        </div>
         <Toaster />
       </body>
     </html>

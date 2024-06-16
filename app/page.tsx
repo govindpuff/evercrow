@@ -16,9 +16,14 @@ export default async function Home() {
   const data = await fetchResults()
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center">
-      <Uploader />
-      <FileTable data={data} />
+    <main className="flex min-h-dvh flex-col items-center p-24">
+      <div className="w-full flex flex-col gap-4">
+        <div className="flex justify-between w-full">
+          <div className="text-xl font-semibold">Uploaded Files</div>
+          <Uploader />
+        </div>
+        <FileTable data={data} />
+      </div>
     </main>
   )
 }
