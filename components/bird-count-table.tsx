@@ -28,12 +28,17 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5)
   const [documentData, setDocumentData] = useState(data)
+  const [sortDescending, setSortDescending] = useState(true)
 
   const birds = !!documentData.bird_counts
-    ? Object.entries(documentData.bird_counts).map(([birdName, count]) => ({
-        name: birdName,
-        count,
-      }))
+    ? Object.entries(documentData.bird_counts)
+        .map(([birdName, count]) => ({
+          name: birdName,
+          count,
+        }))
+        .sort((a, b) =>
+          sortDescending ? b.count - a.count : a.count - b.count
+        )
     : []
   const filteredBirds = birds.filter((bird) =>
     bird.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -69,8 +74,11 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
   }, [documentData])
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto p-4">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-2 w-full max-w-4xl mx-auto p-4">
+      <div className="flex items-end gap-2 justify-between">
+        <div className="text-xl font-semibold text-neutral-700 px-2">
+          Birds found
+        </div>
         <Input
           type="search"
           placeholder="Search"
@@ -79,7 +87,7 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
             setSearchTerm(e.target.value)
             setCurrentPage(1)
           }}
-          className="flex-1"
+          className="max-w-[400px]"
         />
       </div>
       <div className="overflow-auto border rounded-lg">
@@ -87,8 +95,11 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
           <TableHeader>
             <TableRow>
               <TableHead>Bird Name</TableHead>
-              <TableHead className="float-end flex items-center">
-                Count
+              <TableHead
+                className="cursor-pointer float-end flex items-center"
+                onClick={() => setSortDescending(!sortDescending)}
+              >
+                Count {sortDescending ? "↓" : "↑"}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -120,7 +131,7 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
                         >
                           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                         </svg>
-                        {"Processing Birds"}
+                        {"Processing document"}
                       </div>
                     </h3>
                   </div>
