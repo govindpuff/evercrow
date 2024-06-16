@@ -4,7 +4,7 @@ import { formatFileSize, getTimeSince } from "@/lib/utils"
 import { Check, Download, Ellipsis, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
-import { toast } from "sonner"
+import { Button } from "./ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,8 +100,10 @@ export const FileTable: React.FC<Props> = ({ data }) => {
             <TableCell>{getTimeSince(new Date(row.created_at))}</TableCell>
             <TableCell>
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Ellipsis className="h-4 w-4" />
+                <DropdownMenuTrigger asChild>
+                  <Button variant={"ghost"}>
+                    <Ellipsis className="h-4 w-4" />
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
