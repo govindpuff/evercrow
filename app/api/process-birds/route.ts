@@ -28,7 +28,7 @@ const getTextractResult = async (jobId: string) => {
   return result
 }
 
-const processTextract = async (id: string) => {
+const processDocument = async (id: string) => {
   const textractCommand = new StartDocumentTextDetectionCommand({
     DocumentLocation: {
       S3Object: { Bucket: "evercrow-files", Name: `${id}.pdf` },
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     await sql`INSERT INTO process_birds_results (id, filename, filesize, status) VALUES (${id}, ${file.name}, ${file.size} ,'processing');`
 
     // kick this async task off
-    processTextract(id)
+    processDocument(id)
 
     return NextResponse.json({ id }, { status: 200 })
   } catch (error) {
