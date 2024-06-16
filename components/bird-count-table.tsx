@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type Props = {
   data: ProcessBirdsResultRow
@@ -27,8 +27,10 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5)
-  const birds = !!data.bird_counts
-    ? Object.entries(data.bird_counts).map(([birdName, count]) => ({
+  const [documentData, setDocumentData] = useState(data)
+
+  const birds = !!documentData.bird_counts
+    ? Object.entries(documentData.bird_counts).map(([birdName, count]) => ({
         name: birdName,
         count,
       }))
@@ -43,6 +45,29 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber)
   }
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout
+
+    const pollData = async () => {
+      const res = await fetch(`/api/documents/${data.id}`, { method: "GET" })
+      const result = (await res.json()) as ProcessBirdsResultRow
+      setDocumentData(result)
+      const isProcessing = documentData.status === "processing"
+      if (!isProcessing) {
+        setDocumentData(result)
+        clearInterval(intervalId)
+      }
+    }
+
+    // poll every 5 seconds until no longer processing
+    if (documentData.status === "processing") {
+      intervalId = setInterval(pollData, 5000)
+    }
+
+    return () => clearInterval(intervalId)
+  }, [documentData])
+
   return (
     <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto p-4">
       <div className="flex items-center gap-2">
@@ -75,7 +100,7 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
               </TableRow>
             ))}
 
-            {data.status === "processing" && (
+            {documentData.status === "processing" && (
               <TableRow className="w-full hover:bg-transparent">
                 <TableCell colSpan={2}>
                   <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
@@ -103,7 +128,7 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
               </TableRow>
             )}
 
-            {birds.length === 0 && data.status === "success" && (
+            {birds.length === 0 && documentData.status === "success" && (
               <TableRow className="w-full hover:bg-transparent">
                 <TableCell colSpan={2}>
                   <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
@@ -123,19 +148,19 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
                 aria-disabled={
                   currentPage === 1 ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                 }
                 tabIndex={
                   currentPage === 1 ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                     ? -1
                     : undefined
                 }
                 className={
                   currentPage === 1 ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                     ? "pointer-events-none opacity-50"
                     : "cursor-pointer"
                 }
@@ -160,19 +185,19 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
                 aria-disabled={
                   currentPage === totalPages ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                 }
                 tabIndex={
                   currentPage === totalPages ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                     ? -1
                     : undefined
                 }
                 className={
                   currentPage === totalPages ||
                   birds.length === 0 ||
-                  data.status === "processing"
+                  documentData.status === "processing"
                     ? "pointer-events-none opacity-50"
                     : "cursor-pointer"
                 }

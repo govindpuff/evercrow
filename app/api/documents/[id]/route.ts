@@ -3,6 +3,20 @@ import { DeleteObjectCommand } from "@aws-sdk/client-s3"
 import { sql } from "@vercel/postgres"
 import { NextResponse } from "next/server"
 
+export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
+export const revalidate = 0
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { rows } =
+    await sql<ProcessBirdsResultRow>`SELECT * FROM process_birds_results where id LIKE ${params.id};`
+
+  return NextResponse.json(rows[0])
+}
+
 export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
