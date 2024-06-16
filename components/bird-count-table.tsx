@@ -127,12 +127,23 @@ export const BirdCountTable: React.FC<Props> = ({ data }) => {
                 </TableCell>
               </TableRow>
             )}
+            {filteredBirds.length === 0 && birds.length > 0 && (
+              <TableRow className="w-full hover:bg-transparent">
+                <TableCell colSpan={2}>
+                  <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
+                    <h3 className="text-xl text-center">{"No results"}</h3>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
 
             {birds.length === 0 && documentData.status === "success" && (
               <TableRow className="w-full hover:bg-transparent">
                 <TableCell colSpan={2}>
                   <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
-                    <h3 className="text-xl text-center">{"No birds found"}</h3>
+                    <h3 className="text-xl text-center">
+                      {"No birds found in document"}
+                    </h3>
                   </div>
                 </TableCell>
               </TableRow>
