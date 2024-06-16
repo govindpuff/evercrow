@@ -1,5 +1,6 @@
 "use client"
 
+import { formatFileSize } from "@/lib/utils"
 import { Check, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -48,6 +49,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
         <TableRow>
           <TableHead>ID</TableHead>
           <TableHead>File Name</TableHead>
+          <TableHead>Size</TableHead>
           <TableHead>Processed</TableHead>
           <TableHead>Uploaded At</TableHead>
         </TableRow>
@@ -61,6 +63,9 @@ export const FileTable: React.FC<Props> = ({ data }) => {
           >
             <TableCell>{row.id}</TableCell>
             <TableCell className="font-medium">{row.filename}</TableCell>
+            <TableCell className="font-medium">
+              {formatFileSize(row.filesize)}
+            </TableCell>
             <TableCell>
               {row.status === "processing" ? (
                 <svg

@@ -6,9 +6,8 @@ function Navbar() {
       <Link href={"/"}>
         <img src="/evercrow.png" className="h-12" />
       </Link>
-      <div className="flex gap-8 items-center">
+      <div className="flex gap-12 items-center font-medium">
         <Link href={"/about"}>About</Link>
-        <Link href={"/birds"}>Birds</Link>
         <Link href={"/documents"}>Documents</Link>
       </div>
     </div>

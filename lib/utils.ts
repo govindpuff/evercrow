@@ -12,3 +12,13 @@ export const getBase64 = async (file: File) =>
     reader.onload = () => resolve(reader.result)
     reader.onerror = (error) => reject(error)
   })
+
+export const formatFileSize = (numBytes: number) => {
+  const sizeFormatter = new Intl.NumberFormat([], {
+    style: "unit",
+    unit: "byte",
+    notation: "compact",
+    unitDisplay: "narrow",
+  })
+  return sizeFormatter.format(numBytes)
+}

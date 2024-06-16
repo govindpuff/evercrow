@@ -1,7 +1,7 @@
 type ProcessBirdsResultRow = {
   id: string
   filename: string
-  filesize: bigint
+  filesize: number
   created_at: Date
   updated_at: Date
   status: "processing" | "failed" | "success"
