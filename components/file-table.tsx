@@ -106,9 +106,15 @@ export const FileTable: React.FC<Props> = ({ data }) => {
                 <DropdownMenuContent>
                   <DropdownMenuItem
                     className="gap-3"
-                    onClick={(event) => {
-                      toast.info("Download functionality not implemented yet.")
+                    onClick={async (event) => {
                       event.stopPropagation()
+                      const res = await fetch(`/api/documents/${row.id}/raw`, {
+                        next: { revalidate: 3500 }, // slightly less than the expiry of the signed url
+                        method: "GET",
+                        cache: "force-cache",
+                      })
+                      const url = await res.json()
+                      window.location.href = url
                     }}
                   >
                     <Download className="h-4 w-4" />

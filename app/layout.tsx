@@ -18,7 +18,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex justify-center relative text-sm`}>
+      <body
+        className={`${inter.className} flex justify-center relative text-sm`}
+      >
         <div className="max-w-screen-xl w-full relative">
           <Navbar />
           {children}
