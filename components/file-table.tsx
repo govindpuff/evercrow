@@ -1,13 +1,15 @@
 "use client"
 
 import { formatFileSize, getTimeSince } from "@/lib/utils"
-import { Check, Ellipsis, Trash2, X } from "lucide-react"
+import { Check, Download, Ellipsis, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
+import { toast } from "sonner"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import {
@@ -102,6 +104,17 @@ export const FileTable: React.FC<Props> = ({ data }) => {
                   <Ellipsis className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                  <DropdownMenuItem
+                    className="gap-3"
+                    onClick={(event) => {
+                      toast.info("Download functionality not implemented yet.")
+                      event.stopPropagation()
+                    }}
+                  >
+                    <Download className="h-4 w-4" />
+                    Download
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="gap-3"
                     onClick={(event) => event.stopPropagation()}
