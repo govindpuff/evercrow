@@ -17,7 +17,7 @@ export const FilePreview: React.FC<Props> = ({ data }) => {
     <Document
       file={{ data: memoizedData }}
       loading={
-        <div className="w-[250px] h-[320px] flex justify-center items-center">
+        <div className="w-[270px] h-[350px] flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
