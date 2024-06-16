@@ -1,6 +1,5 @@
 "use client"
 
-import React from "react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -10,15 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Download, Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
+import React from "react"
 
 type Props = {
   id: string
 }
 
 export const DocumentActionsMenu: React.FC<Props> = ({ id }) => {
-  const router = useRouter()
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
