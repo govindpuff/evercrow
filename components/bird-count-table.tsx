@@ -19,32 +19,20 @@ import {
 } from "@/components/ui/table"
 import { useState } from "react"
 
-export default function BirdCountTable() {
+type Props = {
+  data: ProcessBirdsResultRow
+}
+
+export const BirdCountTable: React.FC<Props> = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5)
-  const birds = [
-    { name: "Bald Eagle", count: 250 },
-    { name: "Blue Jay", count: 1500 },
-    { name: "Cardinal", count: 800 },
-    { name: "Chickadee", count: 1200 },
-    { name: "Crow", count: 2000 },
-    { name: "Dove", count: 1800 },
-    { name: "Falcon", count: 150 },
-    { name: "Finch", count: 1000 },
-    { name: "Goose", count: 500 },
-    { name: "Hawk", count: 300 },
-    { name: "Heron", count: 400 },
-    { name: "Hummingbird", count: 750 },
-    { name: "Loon", count: 200 },
-    { name: "Mockingbird", count: 900 },
-    { name: "Owl", count: 600 },
-    { name: "Pelican", count: 350 },
-    { name: "Robin", count: 1400 },
-    { name: "Sparrow", count: 2500 },
-    { name: "Swan", count: 280 },
-    { name: "Vulture", count: 180 },
-  ]
+  const birds = !!data.bird_counts
+    ? Object.entries(data.bird_counts).map(([birdName, count]) => ({
+        name: birdName,
+        count,
+      }))
+    : []
   const filteredBirds = birds.filter((bird) =>
     bird.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -86,6 +74,44 @@ export default function BirdCountTable() {
                 <TableCell className="text-right">{bird.count}</TableCell>
               </TableRow>
             ))}
+
+            {data.status === "processing" && (
+              <TableRow className="w-full hover:bg-transparent">
+                <TableCell colSpan={2}>
+                  <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
+                    <h3 className="text-xl text-center">
+                      <div className="flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="animate-spin"
+                        >
+                          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                        </svg>
+                        {"Processing Birds"}
+                      </div>
+                    </h3>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {birds.length === 0 && data.status === "success" && (
+              <TableRow className="w-full hover:bg-transparent">
+                <TableCell colSpan={2}>
+                  <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
+                    <h3 className="text-xl text-center">{"No birds found"}</h3>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
@@ -94,10 +120,22 @@ export default function BirdCountTable() {
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                aria-disabled={currentPage === 1}
-                tabIndex={currentPage === 1 ? -1 : undefined}
+                aria-disabled={
+                  currentPage === 1 ||
+                  birds.length === 0 ||
+                  data.status === "processing"
+                }
+                tabIndex={
+                  currentPage === 1 ||
+                  birds.length === 0 ||
+                  data.status === "processing"
+                    ? -1
+                    : undefined
+                }
                 className={
-                  currentPage === 1
+                  currentPage === 1 ||
+                  birds.length === 0 ||
+                  data.status === "processing"
                     ? "pointer-events-none opacity-50"
                     : "cursor-pointer"
                 }
@@ -119,10 +157,22 @@ export default function BirdCountTable() {
             )}
             <PaginationItem>
               <PaginationNext
-                aria-disabled={currentPage === totalPages}
-                tabIndex={currentPage === totalPages ? -1 : undefined}
+                aria-disabled={
+                  currentPage === totalPages ||
+                  birds.length === 0 ||
+                  data.status === "processing"
+                }
+                tabIndex={
+                  currentPage === totalPages ||
+                  birds.length === 0 ||
+                  data.status === "processing"
+                    ? -1
+                    : undefined
+                }
                 className={
-                  currentPage === totalPages
+                  currentPage === totalPages ||
+                  birds.length === 0 ||
+                  data.status === "processing"
                     ? "pointer-events-none opacity-50"
                     : "cursor-pointer"
                 }
