@@ -4,16 +4,16 @@ export default async function Home() {
   return (
     <main className="flex flex-col items-center py-96 min-h-dvh">
       <TypingText
-        text="Focus on the birdwatching."
-        delayBetweenChars={50}
+        text="focus on the birds."
+        delayBetweenChars={150}
         initialDelay={200}
         className="text-6xl font-semibold text-neutral-700"
       />
       <TypingText
-        text="Leave the math to us."
-        delayBetweenChars={50}
-        initialDelay={2000}
-        className="text-6xl font-semibold text-neutral-700"
+        text="leave the math to us."
+        delayBetweenChars={150}
+        initialDelay={4000}
+        className="text-6xl font-semibold text-orange-200 mt-4"
       />
       <div className="container">
         <div className="bird-container bird-container--one">
