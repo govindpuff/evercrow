@@ -54,7 +54,7 @@ export default function Uploader() {
         <DialogTrigger asChild>
           <Button onClick={() => setDialogOpen(true)} className="gap-2">
             <Plus className="h-5 w-5" />
-            Upload new file
+            Upload a new document
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -72,7 +72,7 @@ export default function Uploader() {
               handleFileChange(e)
             }}
           />
-          {isProcessing && <div>Processing file</div>}
+
           <DialogFooter>
             <Button
               disabled={isProcessing}
@@ -85,8 +85,29 @@ export default function Uploader() {
             <Button
               disabled={!file || (file && isProcessing)}
               onClick={() => processFile()}
+              className="gap-2"
             >
-              Start Processing
+              {isProcessing ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="animate-spin"
+                  >
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                  Processing
+                </>
+              ) : (
+                "Start Processing"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

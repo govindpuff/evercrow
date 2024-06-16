@@ -19,7 +19,7 @@ export default async function Documents() {
     <main className="flex flex-col items-center py-32 px-8">
       <div className="w-full flex flex-col gap-4">
         <div className="flex justify-between w-full">
-          <div className="text-xl font-semibold">Uploaded Files</div>
+          <div className="text-xl font-semibold">My Documents</div>
           <Uploader />
         </div>
         <FileTable data={data} />

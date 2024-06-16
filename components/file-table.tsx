@@ -1,9 +1,15 @@
 "use client"
 
 import { formatFileSize } from "@/lib/utils"
-import { Check, X } from "lucide-react"
+import { Check, Ellipsis, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -25,7 +31,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
     let intervalId: NodeJS.Timeout
 
     const pollData = async () => {
-      const res = await fetch("/api/jobs", { method: "GET" })
+      const res = await fetch("/api/documents", { method: "GET" })
       const result = (await res.json()) as ProcessBirdsResultRow[]
       setRows(result)
       const isProcessing = result.some((row) => row.status === "processing")
@@ -52,6 +58,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
           <TableHead>Size</TableHead>
           <TableHead>Processed</TableHead>
           <TableHead>Uploaded At</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -89,15 +96,37 @@ export const FileTable: React.FC<Props> = ({ data }) => {
               )}
             </TableCell>
             <TableCell>{new Date(row.created_at).toISOString()}</TableCell>
+            <TableCell>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Ellipsis className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    className="gap-3"
+                    onClick={(event) => event.stopPropagation()}
+                    onSelect={async () => {
+                      await fetch(`/api/documents/${row.id}`, {
+                        method: "DELETE",
+                      })
+                      location.reload()
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
           </TableRow>
         ))}
         {rows.length === 0 && (
           <TableRow className="w-full hover:bg-transparent">
-            <TableCell colSpan={8}>
-              <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6">
-                <div className="text-center space-y-2">
-                  <h3 className="text-xl">No files uploaded</h3>
-                </div>
+            <TableCell colSpan={6}>
+              <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
+                <h3 className="text-xl text-center">
+                  There's nothing here yet
+                </h3>
               </div>
             </TableCell>
           </TableRow>
