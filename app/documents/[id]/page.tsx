@@ -6,22 +6,31 @@ import { sql } from "@vercel/postgres"
 import { notFound } from "next/navigation"
 
 const fetchDocument = async (id: string) => {
-  const [object, { rows }] = await Promise.all([
-    s3.send(
-      new GetObjectCommand({ Bucket: "evercrow-files", Key: `${id}.pdf` })
-    ),
-    sql`SELECT * FROM process_birds_results where id = ${id}`,
-  ])
+  try {
+    const [object, { rows }] = await Promise.all([
+      s3.send(
+        new GetObjectCommand({ Bucket: "evercrow-files", Key: `${id}.pdf` })
+      ),
+      sql`SELECT * FROM process_birds_results where id = ${id}`,
+    ])
 
-  const pdfFile = await object.Body?.transformToByteArray()
-  const data = rows[0] as ProcessBirdsResultRow
+    const pdfFile = await object.Body?.transformToByteArray()
+    const data = rows[0] as ProcessBirdsResultRow
 
-  if (!data || !pdfFile) {
-    return notFound()
+    if (!data || !pdfFile) {
+      return notFound()
+    }
+
+    return { data, pdfFile }
+  } catch (e) {
+    console.error(e)
+    notFound()
   }
-
-  return { data, pdfFile }
 }
+
+export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
+export const revalidate = 0
 
 async function page({ params }: { params: { id: string } }) {
   const { data, pdfFile } = await fetchDocument(params.id)
