@@ -1,6 +1,6 @@
 "use client"
 
-import { formatFileSize } from "@/lib/utils"
+import { formatFileSize, getTimeSince } from "@/lib/utils"
 import { Check, Ellipsis, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -57,7 +57,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
           <TableHead>File Name</TableHead>
           <TableHead>Size</TableHead>
           <TableHead>Processed</TableHead>
-          <TableHead>Uploaded At</TableHead>
+          <TableHead>Uploaded</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -95,7 +95,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
                 <Check className="h-6 w-6" />
               )}
             </TableCell>
-            <TableCell>{new Date(row.created_at).toISOString()}</TableCell>
+            <TableCell>{getTimeSince(new Date(row.created_at))}</TableCell>
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger>

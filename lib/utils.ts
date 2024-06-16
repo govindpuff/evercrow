@@ -1,5 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
+import TimeAgo from "javascript-time-ago"
 import { twMerge } from "tailwind-merge"
+import en from "javascript-time-ago/locale/en"
+
+TimeAgo.addDefaultLocale(en)
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -21,4 +25,10 @@ export const formatFileSize = (numBytes: number) => {
     unitDisplay: "narrow",
   })
   return sizeFormatter.format(numBytes)
+}
+
+export const getTimeSince = (date: Date) => {
+  const timeAgo = new TimeAgo("en-US")
+
+  return timeAgo.format(date)
 }
