@@ -54,7 +54,7 @@ export default function Uploader() {
         <DialogTrigger asChild>
           <Button onClick={() => setDialogOpen(true)} className="gap-2">
             <Plus className="h-5 w-5" />
-            Upload a new document
+            Upload document
           </Button>
         </DialogTrigger>
         <DialogContent>

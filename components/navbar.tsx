@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Button } from "./ui/button"
 
 function Navbar() {
   return (
@@ -7,7 +8,9 @@ function Navbar() {
         <img src="/evercrow.png" className="h-12" />
       </Link>
       <div className="flex gap-12 items-center font-medium">
-        <Link href={"/documents"}>Documents</Link>
+        <Link href={"/documents"}>
+          <Button variant={"ghost"}>Documents</Button>
+        </Link>
       </div>
     </div>
   )
