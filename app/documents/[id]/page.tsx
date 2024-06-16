@@ -1,3 +1,4 @@
+import BirdCountTable from "@/components/bird-count-table"
 import { FilePreview } from "@/components/file-preview"
 import { s3 } from "@/lib/s3"
 import { formatFileSize, getTimeSince } from "@/lib/utils"
@@ -47,7 +48,7 @@ async function page({ params }: { params: { id: string } }) {
           </div>
         </div>
         <div className="w-full bg-neutral-50 shadow rounded-lg">
-          {JSON.stringify(data)}
+          <BirdCountTable />
         </div>
       </div>
     </main>
