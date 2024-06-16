@@ -55,10 +55,10 @@ export const FileTable: React.FC<Props> = ({ data }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>ID</TableHead>
           <TableHead>File Name</TableHead>
           <TableHead>Size</TableHead>
           <TableHead>Processed</TableHead>
+          <TableHead>Num. Bird Species</TableHead>
           <TableHead>Uploaded</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -70,7 +70,6 @@ export const FileTable: React.FC<Props> = ({ data }) => {
             onClick={() => router.push(`/documents/${row.id}`)}
             className="cursor-pointer"
           >
-            <TableCell>{row.id}</TableCell>
             <TableCell className="font-medium">{row.filename}</TableCell>
             <TableCell className="font-medium">
               {formatFileSize(row.filesize)}
@@ -97,6 +96,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
                 <Check className="h-6 w-6" />
               )}
             </TableCell>
+            <TableCell>{Object.keys(row.bird_counts ?? {}).length}</TableCell>
             <TableCell>{getTimeSince(new Date(row.created_at))}</TableCell>
             <TableCell>
               <DropdownMenu>
