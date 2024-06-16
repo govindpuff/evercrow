@@ -48,20 +48,19 @@ export const FileTable: React.FC<Props> = ({ data }) => {
         <TableRow>
           <TableHead>ID</TableHead>
           <TableHead>File Name</TableHead>
-          <TableHead>Uploaded At</TableHead>
           <TableHead>Processed</TableHead>
+          <TableHead>Uploaded At</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.map((row) => (
           <TableRow
             key={row.id}
-            onClick={() => router.push(`/files/${row.id}`)}
+            onClick={() => router.push(`/documents/${row.id}`)}
             className="cursor-pointer"
           >
             <TableCell>{row.id}</TableCell>
             <TableCell className="font-medium">{row.filename}</TableCell>
-            <TableCell>{new Date(row.created_at).toISOString()}</TableCell>
             <TableCell>
               {row.status === "processing" ? (
                 <svg
@@ -84,8 +83,20 @@ export const FileTable: React.FC<Props> = ({ data }) => {
                 <Check className="h-6 w-6" />
               )}
             </TableCell>
+            <TableCell>{new Date(row.created_at).toISOString()}</TableCell>
           </TableRow>
         ))}
+        {rows.length === 0 && (
+          <TableRow className="w-full hover:bg-transparent">
+            <TableCell colSpan={8}>
+              <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6">
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl">No files uploaded</h3>
+                </div>
+              </div>
+            </TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   )
