@@ -7,13 +7,13 @@ export default async function Home() {
         text="Focus on the birdwatching."
         delayBetweenChars={50}
         initialDelay={200}
-        className="text-7xl font-semibold text-neutral-800"
+        className="text-6xl font-semibold text-neutral-700"
       />
       <TypingText
-        text="Leave the counting to us."
+        text="Leave the math to us."
         delayBetweenChars={50}
         initialDelay={2000}
-        className="text-7xl font-semibold text-neutral-800"
+        className="text-6xl font-semibold text-neutral-700"
       />
       <div className="container">
         <div className="bird-container bird-container--one">
