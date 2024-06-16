@@ -125,7 +125,7 @@ export const FileTable: React.FC<Props> = ({ data }) => {
             <TableCell colSpan={6}>
               <div className="flex flex-col w-full items-center justify-center h-[20vh] gap-6 border-dashed border">
                 <h3 className="text-xl text-center">
-                  There's nothing here yet
+                  {"There's nothing here yet"}
                 </h3>
               </div>
             </TableCell>
