@@ -12,8 +12,15 @@ export default async function Home() {
       <TypingText
         text="leave the math to us."
         delayBetweenChars={150}
-        initialDelay={4000}
+        initialDelay={3200}
         className="text-6xl font-semibold text-orange-200 mt-4"
+      />
+      <TypingText
+        text="upload your notes."
+        delayBetweenChars={150}
+        initialDelay={6400}
+        className="text-2xl font-semibold text-neutral-600 animate-pulse mt-12"
+        href="/documents?new=true"
       />
       <div className="container">
         <div className="bird-container bird-container--one">

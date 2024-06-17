@@ -1,7 +1,7 @@
 "use client"
 
 import { Plus } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
 import {
@@ -14,15 +14,22 @@ import {
   DialogTrigger,
 } from "./ui/dialog"
 import { Input } from "./ui/input"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Uploader() {
   const [file, setFile] = useState<File>()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
+  const params = useSearchParams()
+
+  const dialogOpenOnLoad = params.get("new") === "true"
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files?.[0])
   }
+
+  const router = useRouter()
 
   const processFile = async () => {
     if (!file) {
@@ -48,6 +55,12 @@ export default function Uploader() {
     setFile(undefined)
   }
 
+  useEffect(() => {
+    if (dialogOpenOnLoad) {
+      setDialogOpen(true)
+    }
+  }, [])
+
   return (
     <div>
       <Dialog open={dialogOpen}>
@@ -59,9 +72,9 @@ export default function Uploader() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload a new PDF</DialogTitle>
+            <DialogTitle>Upload a new document</DialogTitle>
             <DialogDescription>
-              Process a PDF document to extract accurate bird name counts
+              Select your birdwatching notes (accepts: pdf).
             </DialogDescription>
           </DialogHeader>
           <Input
@@ -77,14 +90,20 @@ export default function Uploader() {
             <Button
               disabled={isProcessing}
               variant={"ghost"}
-              onClick={() => setDialogOpen(false)}
+              onClick={() => {
+                setDialogOpen(false)
+                router.replace("/documents")
+              }}
             >
               Close
             </Button>
 
             <Button
               disabled={!file || (file && isProcessing)}
-              onClick={() => processFile()}
+              onClick={() => {
+                processFile()
+                router.replace("/documents")
+              }}
               className="gap-2"
             >
               {isProcessing ? (
