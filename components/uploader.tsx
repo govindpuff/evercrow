@@ -26,7 +26,15 @@ export default function Uploader() {
   const dialogOpenOnLoad = params.get("new") === "true"
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files?.[0])
+    const newFile = event.target.files?.[0]
+    if (newFile) {
+      if (newFile.size < 5242880) {
+        setFile(newFile)
+      } else {
+        toast("File is too large. File size must be less than 5MB.")
+        event.target.value = ""
+      }
+    }
   }
 
   const router = useRouter()
