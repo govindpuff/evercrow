@@ -64,81 +64,90 @@ export const FileTable: React.FC<Props> = ({ data }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((row) => (
-          <TableRow
-            key={row.id}
-            onClick={() => router.push(`/documents/${row.id}`)}
-            className="cursor-pointer"
-          >
-            <TableCell className="font-medium">{row.filename}</TableCell>
-            <TableCell className="font-medium">
-              {formatFileSize(row.filesize)}
-            </TableCell>
-            <TableCell>
-              {row.status === "processing" ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="animate-spin"
-                >
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-              ) : row.status === "failed" ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Check className="h-6 w-6" />
-              )}
-            </TableCell>
-            <TableCell>{Object.keys(row.bird_counts ?? {}).length}</TableCell>
-            <TableCell>{getTimeSince(new Date(row.created_at))}</TableCell>
-            <TableCell>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant={"ghost"}>
-                    <Ellipsis className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    className="gap-3"
-                    onClick={async (event) => {
-                      event.stopPropagation()
-                      const res = await fetch(`/api/documents/${row.id}/raw`, {
-                        method: "GET",
-                      })
-                      const url = await res.json()
-                      window.location.href = url
-                    }}
+        {rows
+          .sort(
+            (a, b) =>
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+          )
+          .map((row) => (
+            <TableRow
+              key={row.id}
+              onClick={() => router.push(`/documents/${row.id}`)}
+              className="cursor-pointer"
+            >
+              <TableCell className="font-medium">{row.filename}</TableCell>
+              <TableCell className="font-medium">
+                {formatFileSize(row.filesize)}
+              </TableCell>
+              <TableCell>
+                {row.status === "processing" ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="animate-spin"
                   >
-                    <Download className="h-4 w-4" />
-                    Download
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="gap-3"
-                    onClick={(event) => event.stopPropagation()}
-                    onSelect={async () => {
-                      await fetch(`/api/documents/${row.id}`, {
-                        method: "DELETE",
-                      })
-                      location.reload()
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                ) : row.status === "failed" ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Check className="h-6 w-6" />
+                )}
+              </TableCell>
+              <TableCell>{Object.keys(row.bird_counts ?? {}).length}</TableCell>
+              <TableCell>{getTimeSince(new Date(row.created_at))}</TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant={"ghost"}>
+                      <Ellipsis className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      className="gap-3"
+                      onClick={async (event) => {
+                        event.stopPropagation()
+                        const res = await fetch(
+                          `/api/documents/${row.id}/raw`,
+                          {
+                            method: "GET",
+                          }
+                        )
+                        const url = await res.json()
+                        window.location.href = url
+                      }}
+                    >
+                      <Download className="h-4 w-4" />
+                      Download
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="gap-3"
+                      onClick={(event) => event.stopPropagation()}
+                      onSelect={async () => {
+                        await fetch(`/api/documents/${row.id}`, {
+                          method: "DELETE",
+                        })
+                        location.reload()
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
         {rows.length === 0 && (
           <TableRow className="w-full hover:bg-transparent">
             <TableCell colSpan={6}>
