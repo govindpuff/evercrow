@@ -18,9 +18,7 @@ export const FilePreview: React.FC<Props> = ({ id }) => {
     const fetchDocument = async () => {
       setLoading(true)
       const res = await fetch(`/api/documents/${id}/raw`, {
-        next: { revalidate: 3500 }, // slightly less than the expiry of the signed url
         method: "GET",
-        cache: "force-cache",
       })
       const url = await res.json()
       setFile(url)

@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Download, Trash2 } from "lucide-react"
 import React from "react"
@@ -27,9 +27,7 @@ export const DocumentActionsMenu: React.FC<Props> = ({ id }) => {
           onClick={async (event) => {
             event.stopPropagation()
             const res = await fetch(`/api/documents/${id}/raw`, {
-              next: { revalidate: 3500 }, // slightly less than the expiry of the signed url
               method: "GET",
-              cache: "force-cache",
             })
             const url = await res.json()
             location.href = url
